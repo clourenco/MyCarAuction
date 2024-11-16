@@ -3,11 +3,11 @@ using MyCarAuctionAPI.Domain.Models.Enums;
 using MyCarAuctionAPI.Features.Vehicles.Interfaces.Services;
 using MyCarAuctionAPI.Infrastructure.Data.Entities;
 using MyCarAuction.Api.Features.Vehicles.Repository;
-using MyCarAuction.Api.Features.Vehicles.Common;
+using MyCarAuction.Api.Common.Exceptions;
 
 namespace MyCarAuctionAPI.Features.Vehicles.Services
 {
-    public class VehicleService : IVehicleService
+    public sealed class VehicleService : IVehicleService
     {
         private readonly IVehicleRepository _vehicleRepository;
 
@@ -16,9 +16,9 @@ namespace MyCarAuctionAPI.Features.Vehicles.Services
             _vehicleRepository = vehicleRepository ?? throw new ArgumentNullException(nameof(vehicleRepository));
         }
 
-        public async Task<Vehicle> GetById(Guid id, CancellationToken cancellationToken)
+        public async Task<Vehicle> GetVehicle(Guid id, CancellationToken cancellationToken)
         {
-            var existentVehicle = await _vehicleRepository.GetById(id, cancellationToken);
+            var existentVehicle = await _vehicleRepository.Get(id, cancellationToken);
 
             if (existentVehicle != null)
                 return MapToModel(existentVehicle);
@@ -26,22 +26,22 @@ namespace MyCarAuctionAPI.Features.Vehicles.Services
                 throw new VehicleNotFoundException($"Vehicle with id {id} was found.");
         }
 
-        public async Task<Vehicle> Add(Vehicle vehicle, CancellationToken cancellationToken)
+        public async Task<Vehicle> AddVehicle(Vehicle vehicle, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(vehicle);
-            var existentVehicle = await _vehicleRepository.GetById(vehicle.Id, cancellationToken);
+            var existentVehicle = await _vehicleRepository.Get(vehicle.Id, cancellationToken);
 
             if (existentVehicle != null)
-                throw new ArgumentException("A vehicle with the provided id already exists.");
+                throw new KeyViolationException($"The provided id ({vehicle.Id}) for the vehicle is already in use.");
 
             VehicleEntity vehicleEntity = MapToEntity(vehicle);
 
-            var addedVehicle = await _vehicleRepository.Add(vehicleEntity, cancellationToken);
+            var addedVehicle = await _vehicleRepository.Create(vehicleEntity, cancellationToken);
 
             return MapToModel(addedVehicle);
         }
 
-        public async Task<IEnumerable<Vehicle>> Search(
+        public async Task<IEnumerable<Vehicle>> SearchVehicle(
             string? type,
             string? manufacturer,
             string? model,
@@ -58,7 +58,7 @@ namespace MyCarAuctionAPI.Features.Vehicles.Services
                 throw new ArgumentException("At least one search criteria must be provided.");
             }
 
-            var vehicleEntities = await _vehicleRepository.Find(
+            var vehicleEntities = await _vehicleRepository.FindVehicle(
                 type: type,
                 manufacturer: manufacturer,
                 model: model,

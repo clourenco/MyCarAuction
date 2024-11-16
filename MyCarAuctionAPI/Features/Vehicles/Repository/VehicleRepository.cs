@@ -6,9 +6,9 @@ using MyCarAuctionAPI.Infrastructure.Repository;
 
 namespace MyCarAuctionAPI.Features.Vehicles.Repository
 {
-    public class VehicleRepository(IDbContextFactory<ApiDbContext> dbContextFactory) : BaseRepository<VehicleEntity>(dbContextFactory), IVehicleRepository
+    public sealed class VehicleRepository(IDbContextFactory<ApiDbContext> dbContextFactory) : BaseRepository<VehicleEntity>(dbContextFactory), IVehicleRepository
     {
-        public async Task<IEnumerable<VehicleEntity>> Find(
+        public async Task<IEnumerable<VehicleEntity>> FindVehicle(
             string? type,
             string? manufacturer,
             string? model,

@@ -1,22 +1,22 @@
 ﻿using MediatR;
 using MyCarAuctionAPI.Features.Vehicles.Interfaces.Services;
 
-namespace MyCarAuction.Api.Features.Vehicles.Queries.GetVehicleById
+namespace MyCarAuction.Api.Features.Vehicles.Queries.GetVehicle
 {
-    public sealed class GetVehicleByIdHandler : IRequestHandler<GetVehicleByIdQuery, GetVehicleByIdResponse>
+    public sealed class GetVehicleHandler : IRequestHandler<GetVehicleQuery, GetVehicleResponse>
     {
         private readonly IVehicleService _vehicleService;
 
-        public GetVehicleByIdHandler(IVehicleService vehicleService)
+        public GetVehicleHandler(IVehicleService vehicleService)
         {
             _vehicleService = vehicleService ?? throw new ArgumentNullException(nameof(vehicleService));
         }
 
-        public async Task<GetVehicleByIdResponse> Handle(GetVehicleByIdQuery request, CancellationToken cancellationToken)
+        public async Task<GetVehicleResponse> Handle(GetVehicleQuery request, CancellationToken cancellationToken)
         {
-            var existentVehicle = await _vehicleService.GetById(request.Id, cancellationToken);
+            var existentVehicle = await _vehicleService.GetVehicle(request.Id, cancellationToken);
 
-            return new GetVehicleByIdResponse(
+            return new GetVehicleResponse(
                 id: existentVehicle.Id,
                 type: existentVehicle.Type.ToString(),
                 manufacturer: existentVehicle.Manufacturer,

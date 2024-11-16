@@ -28,7 +28,7 @@ namespace MyCarAuction.Api.Features.Vehicles.Commands.CreateVehicle
                 startingBid: request.StartingBid
             );
 
-            var addedVehicle = await _vehicleService.Add(vehicle, cancellationToken);
+            var addedVehicle = await _vehicleService.AddVehicle(vehicle, cancellationToken);
 
             return new CreateVehicleResponse(
                 id: addedVehicle.Id,

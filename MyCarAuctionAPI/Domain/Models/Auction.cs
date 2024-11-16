@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace MyCarAuctionAPI.Features.Auctions.Models
+﻿namespace MyCarAuction.Api.Domain.Models
 {
     public class Auction(Guid id, bool isActive, string description)
     {

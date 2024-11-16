@@ -1,14 +1,14 @@
 ﻿using MyCarAuction.Api.Features.Vehicles.Common;
 
-namespace MyCarAuction.Api.Features.Vehicles.Queries.GetVehicleById
+namespace MyCarAuction.Api.Features.Vehicles.Queries.GetVehicle
 {
-    public sealed record GetVehicleByIdResponse : BaseVehicleResponse
+    public sealed record GetVehicleResponse : BaseVehicleResponse
     {
-        public GetVehicleByIdResponse(BaseVehicleResponse original) : base(original)
+        public GetVehicleResponse(BaseVehicleResponse original) : base(original)
         {
         }
 
-        public GetVehicleByIdResponse(
+        public GetVehicleResponse(
             Guid id,
             string type,
             string manufacturer,

@@ -1,4 +1,4 @@
-﻿namespace MyCarAuctionAPI.Features.Users.Models
+﻿namespace MyCarAuction.Api.Domain.Models
 {
     public class User(Guid id, string name, string email)
     {

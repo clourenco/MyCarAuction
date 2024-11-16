@@ -1,4 +1,4 @@
-﻿using MyCarAuction.Api.Features.Vehicles.Common;
+﻿using MyCarAuction.Api.Common.Exceptions;
 using System.Net;
 using System.Text.Json;
 using static System.Net.Mime.MediaTypeNames;
@@ -37,7 +37,7 @@ namespace MyCarAuctionAPI.Middleware
             {
                 ArgumentException or ArgumentNullException => (int)HttpStatusCode.BadRequest,
                 VehicleNotFoundException => (int)HttpStatusCode.NotFound,
-                InvalidOperationException => (int)HttpStatusCode.Conflict,
+                InvalidOperationException or KeyViolationException => (int)HttpStatusCode.Conflict,
                 _ => (int)HttpStatusCode.InternalServerError
             };
 

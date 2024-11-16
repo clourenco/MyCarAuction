@@ -15,7 +15,7 @@ namespace MyCarAuctionAPI.Infrastructure.Repository
             _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException(nameof(dbContextFactory));
         }
 
-        public async Task<T> GetById(Guid id, CancellationToken cancellationToken)
+        public async Task<T> Get(Guid id, CancellationToken cancellationToken)
         {
             await using var dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
             var entity = await dbContext.Set<T>().FindAsync([id], cancellationToken);
@@ -28,7 +28,7 @@ namespace MyCarAuctionAPI.Infrastructure.Repository
             return await dbContext.Set<T>().ToListAsync(cancellationToken);
         }
 
-        public async Task<T> Add(T entity, CancellationToken cancellationToken)
+        public async Task<T> Create(T entity, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(entity);
 
@@ -36,7 +36,7 @@ namespace MyCarAuctionAPI.Infrastructure.Repository
             await dbContext.Set<T>().AddAsync(entity, cancellationToken);
             var result = await dbContext.SaveChangesAsync(cancellationToken);
 
-            return result > 0 ? entity : throw new InvalidOperationException("The add operation did not affect any rows in the database.");
+            return result > 0 ? entity : throw new InvalidOperationException("The create operation did not affect any rows in the database.");
         }
 
         public async Task<T> Update(T entity, CancellationToken cancellationToken)

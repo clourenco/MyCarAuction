@@ -11,7 +11,7 @@ using MyCarAuction.Api.Features.Vehicles.Repository;
 using MediatR;
 using MyCarAuction.Api.PipelineBehavior;
 using MyCarAuction.Api.Features.Vehicles.Commands.CreateVehicle;
-using MyCarAuction.Api.Features.Vehicles.Queries.GetVehicleById;
+using MyCarAuction.Api.Features.Vehicles.Queries.GetVehicle;
 using MyCarAuction.Api.Features.Vehicles.Queries.SearchVehicle;
 
 namespace MyCarAuctionAPI
@@ -55,7 +55,7 @@ namespace MyCarAuctionAPI
 
             app.MapGet("/api/vehicle/{id}", async (Guid id, IMediator mediator) =>
             {
-                var result = await mediator.Send(new GetVehicleByIdQuery(id));
+                var result = await mediator.Send(new GetVehicleQuery(id));
                 return Results.Ok(result);
             });
 

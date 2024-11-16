@@ -5,6 +5,6 @@ namespace MyCarAuction.Api.Features.Vehicles.Repository
 {
     public interface IVehicleRepository : IBaseRepository<VehicleEntity>
     {
-        Task<IEnumerable<VehicleEntity>> Find(string? type, string? manufacturer, string? model, int? year, CancellationToken cancellationToken);
+        Task<IEnumerable<VehicleEntity>> FindVehicle(string? type, string? manufacturer, string? model, int? year, CancellationToken cancellationToken);
     }
 }

@@ -14,7 +14,7 @@ namespace MyCarAuction.Api.Features.Vehicles.Queries.SearchVehicle
 
         public async Task<IEnumerable<SearchVehicleResponse>> Handle(SearchVehicleQuery request, CancellationToken cancellationToken)
         {
-            var foundVehicles = await _vehicleService.Search(
+            var foundVehicles = await _vehicleService.SearchVehicle(
                 type: request.Type,
                 manufacturer: request.Manufacturer,
                 model: request.Model,

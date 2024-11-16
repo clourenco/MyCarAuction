@@ -18,22 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Auctions\Data\" />
-    <Folder Include="Features\Bids\Controllers\" />
-    <Folder Include="Features\Bids\Data\" />
-    <Folder Include="Features\Bids\Services\" />
-    <Folder Include="Features\Bids\Responses\" />
-    <Folder Include="Features\Bids\Requests\" />
-    <Folder Include="Features\Users\Controllers\" />
-    <Folder Include="Features\Users\Data\" />
-    <Folder Include="Features\Users\Requests\" />
-    <Folder Include="Features\Users\Responses\" />
-    <Folder Include="Features\Users\Services\" />
-    <Folder Include="Features\Auctions\Controllers\" />
-    <Folder Include="Features\Auctions\Requests\" />
-    <Folder Include="Features\Auctions\Responses\" />
-    <Folder Include="Features\Auctions\Services\" />
-    <Folder Include="Features\Auctions\Validators\" />
+    <Folder Include="Features\Auctions\Commands\CreateAuction\" />
+    <Folder Include="Features\Auctions\Commands\UpdateAuction\" />
+    <Folder Include="Features\Auctions\Queries\GetAuction\" />
+    <Folder Include="Features\Bids\Commands\CreateBid\" />
+    <Folder Include="Features\Bids\Queries\" />
+    <Folder Include="Features\Users\Commands\CreateUser\" />
+    <Folder Include="Features\Users\Queries\" />
   </ItemGroup>
 
 </Project>

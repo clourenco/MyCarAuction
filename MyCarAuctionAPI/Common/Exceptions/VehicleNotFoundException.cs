@@ -1,6 +1,6 @@
-﻿namespace MyCarAuction.Api.Features.Vehicles.Common
+﻿namespace MyCarAuction.Api.Common.Exceptions
 {
-    public class VehicleNotFoundException : Exception
+    public sealed class VehicleNotFoundException : Exception
     {
         public VehicleNotFoundException() : base("The specified vehicle was not found.")
         {
