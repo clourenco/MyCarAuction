@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.10.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
+    <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Auctions\Data\" />
+    <Folder Include="Features\Bids\Controllers\" />
+    <Folder Include="Features\Bids\Data\" />
+    <Folder Include="Features\Bids\Services\" />
+    <Folder Include="Features\Bids\Responses\" />
+    <Folder Include="Features\Bids\Requests\" />
+    <Folder Include="Features\Users\Controllers\" />
+    <Folder Include="Features\Users\Data\" />
+    <Folder Include="Features\Users\Requests\" />
+    <Folder Include="Features\Users\Responses\" />
+    <Folder Include="Features\Users\Services\" />
+    <Folder Include="Features\Auctions\Controllers\" />
+    <Folder Include="Features\Auctions\Requests\" />
+    <Folder Include="Features\Auctions\Responses\" />
+    <Folder Include="Features\Auctions\Services\" />
+    <Folder Include="Features\Auctions\Validators\" />
+  </ItemGroup>
+
+</Project>
