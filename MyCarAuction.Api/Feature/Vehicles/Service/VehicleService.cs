@@ -49,15 +49,6 @@ internal sealed class VehicleService : IVehicleService
         CancellationToken cancellationToken
     )
     {
-        //if (string.IsNullOrWhiteSpace(type)
-        //    && string.IsNullOrWhiteSpace(manufacturer)
-        //    && string.IsNullOrWhiteSpace(model)
-        //    && year == null
-        //)
-        //{
-        //    throw new ArgumentException("At least one search criteria must be provided.");
-        //}
-
         var vehicleEntities = await _vehicleRepository.FindVehicle(
             type: type,
             manufacturer: manufacturer,

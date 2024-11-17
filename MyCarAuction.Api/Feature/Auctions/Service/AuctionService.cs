@@ -4,10 +4,13 @@ using MyCarAuction.Api.Feature.Auctions.Common.Exceptions;
 using MyCarAuction.Api.Feature.Auctions.Repository;
 using MyCarAuction.Api.Features.Auctions.Common.Exceptions;
 using MyCarAuction.Api.Features.Auctions.Repository;
+using MyCarAuction.Api.Features.Users.Common.CustomException;
+using MyCarAuction.Api.Features.Users.Service;
 using MyCarAuction.Api.Features.Vehicles.Interfaces.Services;
 using MyCarAuction.Api.Features.Vehicles.Repository;
 using MyCarAuction.Api.Features.Vehicles.Services;
 using MyCarAuction.Api.Infrastructure.Data.Entities;
+using System.Security.Principal;
 
 namespace MyCarAuction.Api.Feature.Auctions.Service;
 
@@ -16,12 +19,19 @@ internal sealed class AuctionService : IAuctionService
     private readonly IAuctionRepository _auctionRepository;
     private readonly IBidRepository _bidRepository;
     private readonly IVehicleService _vehicleService;
+    private readonly IUserService _userService;
 
-    public AuctionService(IAuctionRepository auctionRepository, IBidRepository bidRepository, IVehicleService vehicleService)
+    public AuctionService(
+        IAuctionRepository auctionRepository,
+        IBidRepository bidRepository,
+        IVehicleService vehicleService,
+        IUserService userService
+    )
     {
         _auctionRepository = auctionRepository ?? throw new ArgumentNullException(nameof(auctionRepository));
         _bidRepository = bidRepository ?? throw new ArgumentNullException(nameof(bidRepository));
         _vehicleService = vehicleService ?? throw new ArgumentNullException(nameof(vehicleService));
+        _userService = userService ?? throw new ArgumentNullException(nameof(userService)); ;
     }
 
     public async Task<Auction> StartAuction(Auction auction, Guid vehicleId, CancellationToken cancellationToken)
@@ -39,7 +49,7 @@ internal sealed class AuctionService : IAuctionService
 
         AuctionEntity auctionEntity = MapToAuctionEntity(auction);
 
-        AuctionEntity? addedAuction = await CreateAuction(existentVehicle, auctionEntity, cancellationToken);
+        AuctionEntity? addedAuction = await CreateAuction(auctionEntity, existentVehicle, cancellationToken);
 
         return MapToAuctionModel(addedAuction);
     }
@@ -67,13 +77,17 @@ internal sealed class AuctionService : IAuctionService
     {
         ArgumentNullException.ThrowIfNull(bid);
 
-        var auction = await _auctionRepository.Get(bid.AuctionId, cancellationToken) ?? throw new AuctionNotFoundException($"The auction with id {bid.AuctionId} was not found.");
+        var auction = await _auctionRepository.Get(bid.AuctionId, cancellationToken) ??
+            throw new AuctionNotFoundException($"The auction with id {bid.AuctionId} was not found.");
 
         if (!auction.IsActive)
             throw new AuctionNotActiveException($"The auction with id {auction.Id} is not active.");
 
         if (!await IsVehicleInAuction(bid.AuctionId, bid.VehicleId, cancellationToken))
             throw new VehicleNotInAuctionException($"The vehicle with id {bid.VehicleId} is not in the auction with id {bid.AuctionId}.");
+
+        if (await _userService.GetUser(bid.BidderId, cancellationToken) == null)
+            throw new UserNotFoundException($"The bidder with id {bid.BidderId} was not found.");
 
         await IsCurrentBidHigherThanHighestBid(bid, cancellationToken);
 
@@ -95,21 +109,22 @@ internal sealed class AuctionService : IAuctionService
             throw new BidAmountSmallerThanHighestBidAmountException($"The current bid amount ({currentBidAmount}) is smaller than the highest bid amount ({highestBidAmount})");
     }
 
-    private async Task<AuctionEntity?> CreateAuction(Vehicle existentVehicle, AuctionEntity auctionEntity, CancellationToken cancellationToken)
+    private async Task<AuctionEntity?> CreateAuction(AuctionEntity auctionEntity, Vehicle vehicle, CancellationToken cancellationToken)
     {
         var addedAuction = await _auctionRepository.Create(auctionEntity, cancellationToken);
 
         if (addedAuction != null)
         {
-            var bid = new Bid(
-                id: Guid.NewGuid(),
-                auctionId: auctionEntity.Id,
-                vehicleId: existentVehicle.Id,
-                bidderId: Guid.Empty,
-                amount: existentVehicle.StartingBid
-            );
+            var bidEntity = new BidEntity
+            {
+                Id = Guid.NewGuid(),
+                AuctionId = addedAuction.Id,
+                VehicleId = vehicle.Id,
+                BidderId = Guid.Empty,
+                Amount = vehicle.StartingBid
+            };
 
-            var initialBid = await PlaceBid(bid, cancellationToken);
+            var initialBid = await _bidRepository.Create(bidEntity, cancellationToken);
 
             if (initialBid == null)
             {

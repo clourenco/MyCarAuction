@@ -21,11 +21,10 @@ using MyCarAuction.Api.Infrastructure.Pipeline.Behavior;
 using MyCarAuctionAPI.Features.Vehicles.Repository;
 using MyCarAuction.Api.Features.Users.Commands.CreateUser;
 using MyCarAuction.Api.Features.Users.Queries.GetUser;
-using Microsoft.OpenApi.Models;
-using Microsoft.Extensions.Options;
 using MyCarAuction.Api.Feature.Auctions.Command.PlaceBid;
 using MyCarAuction.Api.Feature.Auctions.Repository;
 using MyCarAuction.Api.Feature.Auctions.Service;
+using MyCarAuction.Api.Feature.Users.Query.SearchUser;
 
 namespace MyCarAuction.Api
 {
@@ -78,9 +77,6 @@ namespace MyCarAuction.Api
             // Minimal api Auctions:
             IncludeAuctionMinimalApi(app);
 
-            // Minimal api Bids:
-            IncludeBidMinimalApi(app);
-
             // Minimal api Users:
             IncludeUserMinimalApi(app);
 
@@ -106,37 +102,26 @@ namespace MyCarAuction.Api
 
         private static void IncludeUserMinimalApi(WebApplication app)
         {
-            /// <summary>
-            /// Creates a user.
-            /// </summary>
             app.MapPost("/api/users", async (CreateUserCommand command, IMediator mediator) =>
             {
                 var result = await mediator.Send(command);
                 return Results.Created($"/api/users/{result.Id}", result);
             })
             .WithDescription("Adds a user");
-            //.WithOpenApi(_ => new OpenApiOperation
-            //{
-            //    Summary = "Adds a user",
-            //    Tags = [new() { Name = "MyCarAuction.Api" }]
-            //});
 
-            app.MapGet("/api/user/{id}", async (Guid id, IMediator mediator) =>
+            app.MapGet("/api/users/{id}", async (Guid id, IMediator mediator) =>
             {
                 var result = await mediator.Send(new GetUserQuery(id));
                 return Results.Ok(result);
             })
             .WithDescription("Gets a user");
-        }
 
-        private static void IncludeBidMinimalApi(WebApplication app)
-        {
-            app.MapPost("/api/bids", async (PlaceBidCommand command, IMediator mediator) =>
+            app.MapGet("/api/users", async (string? name, string? email, IMediator mediator, CancellationToken cancellationToken) =>
             {
-                var result = await mediator.Send(command);
-                return Results.Created($"/api/bids/{result.Id}", result);
+                var results = await mediator.Send(new SearchUserQuery(name, email), cancellationToken);
+                return Results.Ok(results);
             })
-            .WithDescription("Places a bid");
+            .WithDescription("Searches for a user");
         }
 
         private static void IncludeAuctionMinimalApi(WebApplication app)
@@ -148,6 +133,13 @@ namespace MyCarAuction.Api
             })
             .WithDescription("Starts an auction");
 
+            app.MapPost("/api/auction/bid", async (PlaceBidCommand command, IMediator mediator) =>
+            {
+                var result = await mediator.Send(command);
+                return Results.Ok(result);
+            })
+            .WithDescription("Places a bid");
+
             app.MapPut("/api/auction/{id}", async (Guid id, IMediator mediator) =>
             {
                 var result = await mediator.Send(new CloseAuctionCommand(id));
@@ -155,7 +147,7 @@ namespace MyCarAuction.Api
             })
             .WithDescription("Closes an auction");
 
-            app.MapGet("/api/auction/{id}", async (Guid id, IMediator mediator) =>
+            app.MapGet("/api/auctions/{id}", async (Guid id, IMediator mediator) =>
             {
                 var result = await mediator.Send(new GetAuctionQuery(id));
                 return Results.Ok(result);
@@ -172,7 +164,7 @@ namespace MyCarAuction.Api
             })
             .WithDescription("Adds a vehicle");
 
-            app.MapGet("/api/vehicle/{id}", async (Guid id, IMediator mediator) =>
+            app.MapGet("/api/vehicles/{id}", async (Guid id, IMediator mediator) =>
             {
                 var result = await mediator.Send(new GetVehicleQuery(id));
                 return Results.Ok(result);
