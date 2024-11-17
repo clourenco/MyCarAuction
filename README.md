@@ -4,3 +4,7 @@ The solution tries to use vertical sliced architecture with CQRS, repository pat
 The assumptions made were basically the following:
 - One auction one vehicle;
 - Auction closed vehicle sold;
+
+# Endpoints
+
+### POST /api/vehicles -> Adds a vehicle
