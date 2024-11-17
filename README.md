@@ -7,4 +7,10 @@ The assumptions made were basically the following:
 
 # Endpoints
 
+## Vehicles
 ### POST /api/vehicles -> Adds a vehicle
+### GET /api/vehicles -> Searches for a vehicle
+### GET /api/vehicle/{id} -> Gets a vehicle by id
+
+
+
