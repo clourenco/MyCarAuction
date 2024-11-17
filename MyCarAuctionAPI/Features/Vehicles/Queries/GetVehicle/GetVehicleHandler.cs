@@ -1,32 +1,31 @@
 ﻿using MediatR;
 using MyCarAuctionAPI.Features.Vehicles.Interfaces.Services;
 
-namespace MyCarAuction.Api.Features.Vehicles.Queries.GetVehicle
+namespace MyCarAuction.Api.Features.Vehicles.Queries.GetVehicle;
+
+public sealed class GetVehicleHandler : IRequestHandler<GetVehicleQuery, GetVehicleResponse>
 {
-    public sealed class GetVehicleHandler : IRequestHandler<GetVehicleQuery, GetVehicleResponse>
+    private readonly IVehicleService _vehicleService;
+
+    public GetVehicleHandler(IVehicleService vehicleService)
     {
-        private readonly IVehicleService _vehicleService;
+        _vehicleService = vehicleService ?? throw new ArgumentNullException(nameof(vehicleService));
+    }
 
-        public GetVehicleHandler(IVehicleService vehicleService)
-        {
-            _vehicleService = vehicleService ?? throw new ArgumentNullException(nameof(vehicleService));
-        }
+    public async Task<GetVehicleResponse> Handle(GetVehicleQuery request, CancellationToken cancellationToken)
+    {
+        var vehicle = await _vehicleService.GetVehicle(request.Id, cancellationToken);
 
-        public async Task<GetVehicleResponse> Handle(GetVehicleQuery request, CancellationToken cancellationToken)
-        {
-            var existentVehicle = await _vehicleService.GetVehicle(request.Id, cancellationToken);
-
-            return new GetVehicleResponse(
-                id: existentVehicle.Id,
-                type: existentVehicle.Type.ToString(),
-                manufacturer: existentVehicle.Manufacturer,
-                model: existentVehicle.Model,
-                year: existentVehicle.Year,
-                numberOfDoors: existentVehicle.NumberOfDoors,
-                numberOfSeats: existentVehicle.NumberOfSeats,
-                loadCapacity: existentVehicle.LoadCapacity,
-                startingBid: existentVehicle.StartingBid
-            );
-        }
+        return new GetVehicleResponse(
+            id: vehicle.Id,
+            type: vehicle.Type.ToString(),
+            manufacturer: vehicle.Manufacturer,
+            model: vehicle.Model,
+            year: vehicle.Year,
+            numberOfDoors: vehicle.NumberOfDoors,
+            numberOfSeats: vehicle.NumberOfSeats,
+            loadCapacity: vehicle.LoadCapacity,
+            startingBid: vehicle.StartingBid
+        );
     }
 }

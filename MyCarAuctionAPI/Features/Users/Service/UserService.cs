@@ -1,8 +1,7 @@
 ﻿using MyCarAuction.Api.Common.Exceptions;
 using MyCarAuction.Api.Domain.Models;
-using MyCarAuction.Api.Features.Users.Common;
+using MyCarAuction.Api.Features.Users.Common.Exceptions;
 using MyCarAuction.Api.Features.Users.Repository;
-using MyCarAuctionAPI.Domain.Models;
 using MyCarAuctionAPI.Infrastructure.Data.Entities;
 
 namespace MyCarAuction.Api.Features.Users.Service
@@ -20,7 +19,7 @@ namespace MyCarAuction.Api.Features.Users.Service
         {
             var existentUser = await _userRepository.Get(id, cancellationToken);
 
-            if (existentUser == null)
+            if (existentUser != null)
                 return MapToModel(existentUser);
             else
                 throw new UserNotFoundException($"User with id {id} was not found.");

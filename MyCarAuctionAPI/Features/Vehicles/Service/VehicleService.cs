@@ -32,7 +32,7 @@ namespace MyCarAuctionAPI.Features.Vehicles.Services
             var existentVehicle = await _vehicleRepository.Get(vehicle.Id, cancellationToken);
 
             if (existentVehicle != null)
-                throw new KeyViolationException($"The provided id ({vehicle.Id}) for the vehicle is already in use.");
+                throw new KeyViolationException($"The provided id {vehicle.Id} for the vehicle is already in use.");
 
             VehicleEntity vehicleEntity = MapToEntity(vehicle);
 

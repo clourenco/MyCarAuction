@@ -1,4 +1,4 @@
-﻿namespace MyCarAuction.Api.Features.Auctions.Common.Exceptions
+﻿namespace MyCarAuction.Api.Common.Exceptions
 {
     public sealed class AuctionNotFoundException : Exception
     {

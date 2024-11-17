@@ -1,4 +1,7 @@
-﻿using MyCarAuction.Api.Common.Exceptions;
+﻿using FluentValidation;
+using MyCarAuction.Api.Common.Exceptions;
+using MyCarAuction.Api.Features.Auctions.Common.Exceptions;
+using MyCarAuction.Api.Features.Bids.Common.Exceptions;
 using System.Net;
 using System.Text.Json;
 using static System.Net.Mime.MediaTypeNames;
@@ -35,8 +38,15 @@ namespace MyCarAuctionAPI.Middleware
 
             context.Response.StatusCode = exception switch
             {
-                ArgumentException or ArgumentNullException => (int)HttpStatusCode.BadRequest,
-                VehicleNotFoundException => (int)HttpStatusCode.NotFound,
+                ArgumentException or
+                ArgumentNullException or
+                ValidationException or
+                AuctionContainsVehicleException or
+                AuctionNotActiveException or
+                BidAmountSmallerThanHighestBidAmountException => (int)HttpStatusCode.BadRequest,
+                VehicleNotFoundException or
+                AuctionNotFoundException or
+                VehicleNotInAuctionException => (int)HttpStatusCode.NotFound,
                 InvalidOperationException or KeyViolationException => (int)HttpStatusCode.Conflict,
                 _ => (int)HttpStatusCode.InternalServerError
             };

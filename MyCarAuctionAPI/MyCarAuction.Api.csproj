@@ -18,13 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Auctions\Commands\CreateAuction\" />
-    <Folder Include="Features\Auctions\Commands\UpdateAuction\" />
-    <Folder Include="Features\Auctions\Queries\GetAuction\" />
-    <Folder Include="Features\Bids\Commands\CreateBid\" />
     <Folder Include="Features\Bids\Queries\" />
-    <Folder Include="Features\Users\Commands\CreateUser\" />
-    <Folder Include="Features\Users\Queries\" />
   </ItemGroup>
 
 </Project>

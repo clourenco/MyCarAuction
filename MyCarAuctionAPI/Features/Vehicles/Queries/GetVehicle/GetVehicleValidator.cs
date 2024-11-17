@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 
-namespace MyCarAuction.Api.Features.Vehicles.Queries.GetVehicle
+namespace MyCarAuction.Api.Features.Vehicles.Queries.GetVehicle;
+
+public sealed class GetVehicleValidator : AbstractValidator<GetVehicleQuery>
 {
-    public sealed class GetVehicleValidator : AbstractValidator<GetVehicleQuery>
+    public GetVehicleValidator()
     {
-        public GetVehicleValidator()
-        {
-            RuleFor(x => x.Id).NotEmpty();
-        }
+        RuleFor(x => x.Id).NotEmpty();
     }
 }

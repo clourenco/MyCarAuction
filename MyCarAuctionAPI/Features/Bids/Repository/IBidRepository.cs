@@ -5,6 +5,7 @@ namespace MyCarAuction.Api.Features.Bids.Repository
 {
     public interface IBidRepository : IBaseRepository<BidEntity>
     {
-        Task<IEnumerable<BidEntity>> GetBidsByVehicleId(Guid vehicleId, CancellationToken cancellationToken);
+        Task<IEnumerable<BidEntity>> GetBidsByAuctionIdVehicleId(Guid AuctionId, Guid vehicleId, CancellationToken cancellationToken);
+        Task<decimal> GetMaxAmountBidByAuctionIdVehicleId(Guid auctionId, Guid vehicleId, CancellationToken cancellationToken);
     }
 }

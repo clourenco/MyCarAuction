@@ -1,4 +1,4 @@
-﻿namespace MyCarAuction.Api.Features.Users.Common
+﻿namespace MyCarAuction.Api.Features.Users.Common.Exceptions
 {
     public sealed class UserNotFoundException : Exception
     {
